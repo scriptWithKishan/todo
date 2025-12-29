@@ -12,8 +12,18 @@ import {
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
 import { Button } from '../ui/button'
+import { register } from '@/actions/auth-action'
+import { useState } from 'react'
+import { FormError, FormSuccess } from '../form-message'
+import { Switch } from '../ui/switch'
+import { Label } from '../ui/label'
 
 export const Register = () => {
+  const [error, setError] = useState<string | "">("")
+  const [success, setSuccess] = useState<string | "">("")
+  const [showPassword, setShowPassword] = useState<boolean>(false)
+
+
   const form = useForm<z.infer<typeof registerSchema>>({
     resolver: zodResolver(registerSchema),
     defaultValues: {
@@ -23,9 +33,22 @@ export const Register = () => {
     }
   })
 
-  const onSubmit = (values: z.infer<typeof registerSchema>) => {
-    console.log(values)
+  const onSubmit = async (values: z.infer<typeof registerSchema>) => {
+    try {
+      const response = await register(values)
+      setError("")
+      setSuccess(response)
+      form.reset()
+    } catch (err: any) {
+      setSuccess("")
+      setError(err.message)
+    }
   }
+
+  const togglePassword = () => {
+    setShowPassword(!showPassword)
+  }
+
 
   return (
     <Form {...form}>
@@ -61,11 +84,17 @@ export const Register = () => {
             <FormItem>
               <FormLabel>Password</FormLabel>
               <FormControl>
-                <Input required type="password" {...field} className="focus-visible:ring-0 focus-visible:border-input" />
+                <Input required type={showPassword ? 'text' : 'password'} {...field} className="focus-visible:ring-0 focus-visible:border-input" />
               </FormControl>
             </FormItem>
           )}
         />
+        <div className="flex items-center gap-x-2">
+          <Switch onCheckedChange={togglePassword} id="show-password" />
+          <Label htmlFor='show-password'>Show password</Label>
+        </div>
+        {error && <FormError text={error} />}
+        {success && <FormSuccess text={success} />}
         <Button type="submit">Sign up</Button>
       </form>
     </Form>

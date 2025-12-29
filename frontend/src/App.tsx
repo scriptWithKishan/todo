@@ -2,6 +2,7 @@ import { Routes, Route } from 'react-router'
 import Home from './components/home'
 import NotFound from './components/not-found'
 import Auth from './components/auth'
+import ProtectedRoute from './components/protected-route'
 
 
 function App() {
@@ -12,7 +13,9 @@ function App() {
       <Route path="/auth" element={<Auth />} />
 
       {/* Protected Routes */}
-      <Route path="/" element={<Home />} />
+      <Route element={<ProtectedRoute />}>
+        <Route path="/" element={<Home />} />
+      </Route>
 
       {/* Default Route: Not Found */}
       <Route path="*" element={<NotFound />} />
