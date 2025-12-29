@@ -5,14 +5,15 @@ import connect from "./config/db.ts"
 const app = express()
 app.use(express.json())
 
+// MongoDB connect
 connect()
 
-app.get("/", (req: Request, res: Response) => {
-  res.status(200).json({
-    message: "Hello World!"
-  })
-})
+// Routes
+import UserRouter from "./routes/user-route.ts"
 
+app.use('/api', UserRouter)
+
+// Not found page
 app.use((req: Request, res: Response) => {
   res.status(404).json({ message: "Page not found" })
 })
