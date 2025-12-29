@@ -1,9 +1,11 @@
 import express, { type Request, type Response } from "express"
 import config from "./config/config.ts"
 import connect from "./config/db.ts"
+import cors from "cors"
 
 const app = express()
 app.use(express.json())
+app.use(cors())
 
 // MongoDB connect
 connect()
