@@ -12,8 +12,10 @@ connect()
 
 // Routes
 import UserRouter from "./routes/user-route.ts"
+import TodoRouter from "./routes/todo-route.ts"
 
-app.use('/api', UserRouter)
+app.use('/api/auth', UserRouter)
+app.use('/api/todo', TodoRouter)
 
 // Not found page
 app.use((req: Request, res: Response) => {
